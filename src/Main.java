@@ -6,10 +6,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Main app = new Main();
         MovieData data = new MovieData();
         try {
-            data = app.loadMovieData("movies.csv");
+            data = loadMovieData("movies.csv");
         } catch (IOException e) {
             System.out.println("Error loading file: " + e.getMessage());
             return;
@@ -42,15 +41,15 @@ public class Main {
 
                     if (index >= 0 && index < data.movies.size()) {
                         double[] movieFeatures = data.movies.get(index).getFeatures();
-                        app.printRecs(app.getRecommendations(movieFeatures, data));
+                        printRecs(getRecommendations(movieFeatures, data));
                     } else {
                         System.out.println("Invalid index.");
                     }
                     break;
 
                 case 2:
-                    double[] userData = app.getUserData(data, scanner);
-                    app.printRecs(app.getRecommendations(userData, data));
+                    double[] userData = getUserData(data, scanner);
+                    printRecs(getRecommendations(userData, data));
                     break;
 
                 case 3:
@@ -64,7 +63,7 @@ public class Main {
         scanner.close();
     }
 
-    void printRecs(Movie[] recommendations){
+    public static void printRecs(Movie[] recommendations){
         System.out.println("Your recommendations:");
         for(Movie movie : recommendations){
             if (movie != null) {
@@ -73,7 +72,7 @@ public class Main {
         }
     }
 
-    public MovieData loadMovieData(String fileName) throws IOException {
+    public static MovieData loadMovieData(String fileName) throws IOException {
         MovieData data = new MovieData();
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
@@ -99,7 +98,7 @@ public class Main {
         return data;
     }
 
-    public double[] getUserData(MovieData data, Scanner scanner) {
+    public static double[] getUserData(MovieData data, Scanner scanner) {
         String[] categories = data.categoryNames;
         double[] userData = new double[categories.length];
 
@@ -115,7 +114,7 @@ public class Main {
         return userData;
     }
 
-    public Movie[] getRecommendations(double[] userData, MovieData data) {
+    public static Movie[] getRecommendations(double[] userData, MovieData data) {
         if (data.movies.isEmpty() || userData.length != data.movies.getFirst().getFeatures().length || data.movies.getFirst().getFeatures().length != data.weights.length) {
             throw new IllegalArgumentException("Vector lengths do not match or are empty");
         }
@@ -134,7 +133,7 @@ public class Main {
 
 
 
-    public double[] multiply(double[] a, double[] b) {
+    public static double[] multiply(double[] a, double[] b) {
         if (a.length != b.length || a.length == 0 || b.length == 0) {
             return new double[0];
         }
@@ -146,7 +145,7 @@ public class Main {
     }
 
 
-    public double calculateSimilarity(double[] a, double[] b) {
+    public static double calculateSimilarity(double[] a, double[] b) {
         if (a == null || b == null) {
             throw new IllegalArgumentException("Vectors must not be null");
         }
