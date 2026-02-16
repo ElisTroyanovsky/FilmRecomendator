@@ -145,16 +145,33 @@ public class Main {
         return result;
     }
 
-    public double calculateSimilarity(double[] a, double[] b){
-    // formula = (sum(a[i}*b[i]))/(sqrt(sum(a[i]^2))*sqrt(sum(b[i]^2)))
+
+    public double calculateSimilarity(double[] a, double[] b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException("Vectors must not be null");
+        }
+        if (a.length == 0 || b.length == 0) {
+            throw new IllegalArgumentException("Vectors must not be empty");
+        }
+        if (a.length != b.length) {
+            throw new IllegalArgumentException("Vector lengths do not match");
+        }
+        // formula = (sum(a[i}*b[i]))/(sqrt(sum(a[i]^2))*sqrt(sum(b[i]^2)))
         double sumMultAB = 0;
         double sumA = 0;
         double sumB = 0;
-        for(int i=0;i<a.length;i++){
-            sumMultAB+=a[i]*b[i];
-            sumA+=a[i]*a[i];
-            sumB+=b[i]*b[i];
+
+        for (int i = 0; i < a.length; i++) {
+            sumMultAB += a[i] * b[i];
+            sumA += a[i] * a[i];
+            sumB += b[i] * b[i];
         }
-        return (sumMultAB)/(Math.sqrt(sumA)*Math.sqrt(sumB));
+
+        double denom = Math.sqrt(sumA) * Math.sqrt(sumB);
+        if (denom == 0.0) {
+            throw new IllegalArgumentException("Cannot compute similarity with zero-magnitude vector");
+        }
+
+        return sumMultAB / denom;
     }
 }
