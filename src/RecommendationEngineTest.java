@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testng.Assert.assertEquals;
 
-public class TestMovieRecomendator {
+public class RecommendationEngineTest {
 
     @Test
     void testIdenticalVectors() {
