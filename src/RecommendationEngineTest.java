@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.testng.Assert.assertEquals;
 
 public class RecommendationEngineTest {
 
@@ -30,24 +29,31 @@ public class RecommendationEngineTest {
     }
 
     @Test
-    void testWeightedSimilarityViaMultiply() {
+    void testWeightedSimilarity() {
         Main app = new Main();
 
         double[] v1 = {1.0, 1.0};
         double[] v2 = {1.0, 0.0};
-        double[] w  = {0.5, 0.5};
 
-        double[] mv1 = app.multiply(w, v1);
-        double[] mv2 = app.multiply(w, v2);
+        double[] wEqual = {0.5, 0.5};
+        double[] mv1Equal = app.multiply(wEqual, v1);
+        double[] mv2Equal = app.multiply(wEqual, v2);
+        double resultEqual = app.calculateSimilarity(mv1Equal, mv2Equal);
+        assertEquals(0.7071, resultEqual, 0.01, "Equal weights should yield ~0.7071");
 
-        double result = app.calculateSimilarity(mv1, mv2);
+        double[] wHighFirst = {0.9, 0.1};
+        double[] mv1High = app.multiply(wHighFirst, v1);
+        double[] mv2High = app.multiply(wHighFirst, v2);
+        double resultHigh = app.calculateSimilarity(mv1High, mv2High);
 
-        // expected ~ 0.7071
-        assertEquals(0.7071, result, 0.01, "Weighted calculation result should match expected math");
+        assertTrue(resultHigh > resultEqual,
+                "Higher weight on the matching feature should increase similarity compared to equal weights");
+        assertTrue(resultHigh > 0.9,
+                "With a very high weight on the matching feature, similarity should be close to 1.0");
     }
 
     @Test
-    void testLengthMismatch_shouldThrow() {
+    void testLengthMismatch() {
         Main app = new Main();
 
         double[] v1 = {1.0, 2.0, 3.0};
